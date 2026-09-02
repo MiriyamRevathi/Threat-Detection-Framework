@@ -101,23 +101,72 @@ SentinelX is an AI-powered Cyber Threat Detection Framework that analyzes upload
 ```text
 AI-Based-Cyber-Threat-Detection-Framework/
 ├── app.py
+├── predict.py
+├── train_model.py
 ├── requirements.txt
-├── model.pkl
+├── requirements.lock
+├── pyproject.toml
+├── pytest.ini
+├── poetry.lock
+├── Pipfile.lock
+├── cyber_threat/
+│   ├── core/
+│   ├── models/
+│   ├── preprocessing/
+│   ├── threat_intel/
+│   ├── alerting/
+│   ├── siem/
+│   ├── analytics/
+│   ├── visualization/
+│   ├── api/
+│   └── utils/
+├── tests/
+│   ├── test_app.py
+│   ├── test_predict.py
+│   ├── test_core.py
+│   ├── test_models.py
+│   ├── test_preprocessing.py
+│   ├── test_alerting.py
+│   ├── test_siem.py
+│   ├── test_analytics.py
+│   └── test_api.py
+├── models/
 ├── templates/
 ├── static/
+├── sample_data/
 ├── assets/
 └── README.md
 ```
 
 ---
 
-# 🚀 Installation
+# 🚀 Installation & Lockfiles
+
+Install dependencies using standard manifest or reproducible lockfile:
 
 ```bash
 git clone https://github.com/BuildWith-AXAT/AI-Based-Cyber-Threat-Detection-Framework.git
 cd AI-Based-Cyber-Threat-Detection-Framework
-pip install -r requirements.txt
+
+# Install from locked dependencies
+pip install -r requirements.lock
+
+# Run the Flask Application
 python app.py
+```
+
+---
+
+# 🧪 Testing & Coverage
+
+Execute the automated test suite with coverage report:
+
+```bash
+# Run pytest test suite
+pytest
+
+# Run pytest with code coverage report
+pytest --cov=cyber_threat --cov=app --cov=predict
 ```
 
 ---
@@ -125,10 +174,10 @@ python app.py
 # 💻 Usage
 
 1. Launch the application.
-2. Upload a CSV dataset.
-3. Run prediction.
+2. Upload a CSV dataset or select a demo dataset.
+3. Run AI threat detection prediction.
 4. View analytics dashboard.
-5. Download the report.
+5. Download reports.
 
 ---
 
