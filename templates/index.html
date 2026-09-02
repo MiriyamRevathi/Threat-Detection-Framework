@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}SentinelX — AI Cyber Threat Detection{% endblock %}
+
+{% block content %}
+
+<!-- ============================= HERO ============================= -->
+<section class="hero">
+  <span class="eyebrow">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2 3 6v6c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V6l-9-4Z"/></svg>
+    AI-Powered Threat Intelligence
+  </span>
+  <h1>Detect network intrusions <span>before they escalate</span></h1>
+  <p class="subtitle">
+    Analyze network traffic with TriXiE™, our AI detection engine powered by a Random Forest model trained on the CICIDS2017 dataset. Detect threats instantly with enterprise-grade accuracy.
+  </p>
+</section>
+
+<!-- ============================= UPLOAD ============================= -->
+<section class="section d1">
+  <div class="glass upload-panel">
+    <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" name="file" accept=".csv" required>
+        <div class="dz-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4 7 9M12 4l5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+        </div>
+        <h3>Drop your network traffic CSV here</h3>
+        <p class="hint">or click to browse from your device</p>
+        <span class="browse-btn">Browse files</span>
+        <p id="filename">No file selected</p>
+      </div>
+
+      <button type="submit" class="primary-btn" id="analyzeBtn">
+        <span class="spinner"></span>
+        <svg class="btn-label" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
+        <span class="btn-label">Analyze Traffic</span>
+      </button>
+
+    </form>
+  </div>
+</section>
+
+<!-- ======================= AI ENGINE STATUS ======================== -->
+<section class="section d2">
+  <div class="section-head">
+    <h2>AI Engine Status</h2>
+    <p>TriXiE AI</p>
+  </div>
+  <div class="status-strip">
+
+    <div class="glass status-chip">
+      <div class="label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12 2 8l7-4 7 4v8l-7 4-7-4v-4"/><path d="m9 12 7-4"/></svg>
+        Model
+      </div>
+      <div class="value">Random Forest</div>
+    </div>
+
+    <div class="glass status-chip">
+      <div class="label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Accuracy
+      </div>
+      <div class="value">99.8%</div>
+    </div>
+
+    <div class="glass status-chip">
+      <div class="label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Version
+      </div>
+      <div class="value">v2.0</div>
+    </div>
+
+    <div class="glass status-chip">
+      <div class="label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>
+        Status
+      </div>
+      <div class="value online">Ready</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================= DEMO DATASETS ========================== -->
+<section class="section d3">
+  <div class="section-head">
+    <h2>Run a Demo Dataset</h2>
+    <p>Instant classification, no upload required</p>
+  </div>
+
+  <div class="demo-grid">
+
+    <a href="/demo/normal" class="glass demo-card tone-green">
+      <div class="icon-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V6l-9-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <h3>Normal Traffic</h3>
+      <p>Baseline capture of clean, everyday network activity.</p>
+      <span class="run">Run detection
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+    </a>
+
+    <a href="/demo/dos" class="glass demo-card tone-amber">
+      <div class="icon-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg>
+      </div>
+      <h3>DoS Attack</h3>
+      <p>Single-source flood aimed at exhausting server resources.</p>
+      <span class="run">Run detection
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+    </a>
+
+    <a href="/demo/ddos" class="glass demo-card tone-red">
+      <div class="icon-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 6.5 10 10M17.5 6.5 14 10M6.5 17.5 10 14M17.5 17.5 14 14"/></svg>
+      </div>
+      <h3>DDoS Attack</h3>
+      <p>Distributed flood from many coordinated traffic sources.</p>
+      <span class="run">Run detection
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+    </a>
+
+    <a href="/demo/portscan" class="glass demo-card tone-blue">
+      <div class="icon-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12 17 7"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <h3>Port Scanning</h3>
+      <p>Reconnaissance traffic probing for open ports and services.</p>
+      <span class="run">Run detection
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+    </a>
+
+    <a href="/demo/mixed" class="glass demo-card tone-cyan">
+      <div class="icon-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg>
+      </div>
+      <h3>Mixed Dataset</h3>
+      <p>Combined sample spanning every attack class at once.</p>
+      <span class="run">Run detection
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+    </a>
+
+  </div>
+</section>
+
+{% endblock %}

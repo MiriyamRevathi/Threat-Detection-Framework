@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis Result — SentinelX{% endblock %}
+
+{% block content %}
+
+{% set risk_class = 'low' if risk_level == 'LOW' else ('medium' if risk_level == 'MEDIUM' else 'high') %}
+{% set risk_color = '#22d3a0' if risk_level == 'LOW' else ('#f2a93b' if risk_level == 'MEDIUM' else '#ff4d6a') %}
+{% set color_map = {
+  'Normal Traffic': '#22d3a0',
+  'DDoS': '#ff4d6a',
+  'DoS': '#f2a93b',
+  'Port Scanning': '#2e7dff',
+  'Bots': '#c084fc',
+  'Brute Force': '#ff8a4d',
+  'Web Attacks': '#21d4d4'
+} %}
+{% set fallback_colors = ['#2e7dff', '#ff4d6a', '#f2a93b', '#21d4d4', '#22d3a0', '#6ea2ff', '#c084fc'] %}
+
+<!-- ============================ HEADER ============================ -->
+<header class="result-header">
+  <div class="file-meta">
+    <h1>Analysis Report</h1>
+    <div class="meta-row">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"/><path d="M14 2v6h6"/></svg>
+        <span class="fname">{{ filename }}</span>
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Processed in {{ prediction_time }}s
+      </span>
+    </div>
+  </div>
+
+  <div class="risk-badge {{ risk_class }}">
+    <span class="pulse-dot"></span>
+    RISK: {{ risk_level }}
+  </div>
+</header>
+
+<!-- ========================= SUMMARY CARDS ========================= -->
+<section class="section d1">
+  <div class="summary-grid">
+
+    <div class="glass metric-card">
+      <div class="top">
+        <span class="label">Total Records</span>
+        <span class="icon tone-blue-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
+      </div>
+      <div class="value" data-counter="{{ total_records }}">0</div>
+    </div>
+
+    <div class="glass metric-card">
+      <div class="top">
+        <span class="label">Safe Records</span>
+        <span class="icon tone-green-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 3.8 8.7 9 10 5.2-1.3 9-5 9-10V6l-9-4Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+      </div>
+      <div class="value" data-counter="{{ normal_records }}">0</div>
+    </div>
+
+    <div class="glass metric-card">
+      <div class="top">
+        <span class="label">Threat Records</span>
+        <span class="icon tone-red-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4"/><path d="M10.3 3.9 1.8 18a1.5 1.5 0 0 0 1.3 2.2h17.8a1.5 1.5 0 0 0 1.3-2.2L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z"/><path d="M12 17h.01"/></svg></span>
+      </div>
+      <div class="value" data-counter="{{ threat_records }}">0</div>
+    </div>
+
+    <div class="glass metric-card">
+      <div class="top">
+        <span class="label">Threat Score</span>
+        <span class="icon tone-amber-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg></span>
+      </div>
+      <div class="value" data-counter="{{ threat_score }}" data-decimals="2" data-suffix="%">0</div>
+    </div>
+
+    <div class="glass metric-card">
+      <div class="top">
+        <span class="label">Risk Level</span>
+        <span class="icon" style="background: rgba(255,255,255,0.06); color: {{ risk_color }};"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/></svg></span>
+      </div>
+      <div class="value" style="color: {{ risk_color }};">{{ risk_level }}</div>
+    </div>
+
+    <div class="glass metric-card">
+      <div class="top">
+        <span class="label">Prediction Time</span>
+        <span class="icon tone-cyan-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+      </div>
+      <div class="value" data-counter="{{ prediction_time }}" data-decimals="3" data-suffix="s">0</div>
+      <div class="sub">Inference latency</div>
+    </div>
+
+    <div class="glass metric-card">
+      <div class="top">
+        <span class="label">Model Used</span>
+        <span class="icon tone-blue-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12 2 8l7-4 7 4v8l-7 4-7-4v-4"/><path d="m9 12 7-4"/></svg></span>
+      </div>
+      <div class="value" style="font-size: 19px;">{{ model_name }}</div>
+    </div>
+
+    <div class="glass metric-card">
+      <div class="top">
+        <span class="label">Accuracy</span>
+        <span class="icon tone-green-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+      </div>
+      <div class="value">{{ accuracy }}</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== CHARTS + RISK GAUGE ===================== -->
+<section class="section d2">
+  <div class="analysis-grid">
+
+    <div class="glass chart-card">
+      <h3>Attack Distribution</h3>
+      <div class="chart-wrap"><canvas id="doughnutChart"></canvas></div>
+    </div>
+
+    <div class="glass chart-card">
+      <h3>Attack Count by Type</h3>
+      <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+    </div>
+
+    <div class="glass gauge-card">
+      <h3>Threat Score</h3>
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 180 180" width="180" height="180">
+          <circle class="gauge-track" cx="90" cy="90" r="74"/>
+          <circle id="gaugeArc" class="gauge-value-arc" cx="90" cy="90" r="74"
+                  stroke="{{ risk_color }}" data-pct="{{ threat_score }}"/>
+        </svg>
+        <div class="gauge-center">
+          <span class="pct">{{ threat_score }}%</span>
+          <span class="lbl">Threat Score</span>
+        </div>
+      </div>
+      <span class="risk-line" style="color: {{ risk_color }};">{{ risk_level }} RISK</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================= THREAT TABLE ========================= -->
+<section class="section d3">
+  <div class="glass table-card">
+
+    <div class="table-toolbar">
+      <h3 style="font-family: var(--font-display); font-size: 15px;">Threat Summary</h3>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="tableSearch" placeholder="Filter by attack type...">
+      </div>
+    </div>
+
+    <table class="threat-table">
+      <thead>
+        <tr>
+          <th>Attack Type</th>
+          <th>Records</th>
+          <th>Share of Traffic</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attack_type, count in attack_counts.items() %}
+        {% set swatch = color_map.get(attack_type, fallback_colors[loop.index0 % fallback_colors|length]) %}
+        {% set share = (count / total_records * 100) if total_records else 0 %}
+        <tr data-search="{{ attack_type|lower }}">
+          <td>
+            <span class="type-tag">
+              <span class="sw" style="background: {{ swatch }};"></span>
+              {{ attack_type }}
+            </span>
+          </td>
+          <td class="count-num">{{ count }}</td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar-track">
+                <div class="pct-bar-fill" style="width: {{ share|round(1) }}%; background: {{ swatch }};"></div>
+              </div>
+              <span class="pct-bar-num">{{ share|round(1) }}%</span>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</section>
+
+<!-- ============================ ACTIONS ============================ -->
+<section class="actions-row">
+  <button class="btn btn-primary" onclick="downloadReport()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+    Download Report
+  </button>
+  <a href="/" class="btn btn-ghost">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    Analyze Again
+  </a>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.__reportData = {
+    filename: {{ filename|tojson }},
+    total_records: {{ total_records|tojson }},
+    normal_records: {{ normal_records|tojson }},
+    threat_records: {{ threat_records|tojson }},
+    attack_counts: {{ attack_counts|tojson }},
+    risk_level: {{ risk_level|tojson }},
+    threat_score: {{ threat_score|tojson }},
+    prediction_time: {{ prediction_time|tojson }},
+    model_name: {{ model_name|tojson }},
+    accuracy: {{ accuracy|tojson }}
+  };
+  renderCharts({{ attack_counts|tojson }});
+</script>
+{% endblock %}
