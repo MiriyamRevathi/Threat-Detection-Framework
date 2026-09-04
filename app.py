@@ -52,6 +52,21 @@ def home():
 
 
 # ===========================
+# Health Check Endpoint
+# ===========================
+
+@app.route("/health", methods=["GET"])
+def health():
+    return {
+        "status": "healthy",
+        "service": "SentinelX Cyber Threat Detector",
+        "version": "2.0.0",
+        "model_loaded": True,
+        "framework": "Flask & Scikit-Learn"
+    }, 200
+
+
+# ===========================
 # Upload CSV
 # ===========================
 

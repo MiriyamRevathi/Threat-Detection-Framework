@@ -28,3 +28,10 @@ def test_demo_route_invalid(client):
 def test_upload_route_get(client):
     response = client.get('/upload')
     assert response.status_code in (200, 302, 405)
+
+def test_health_route(client):
+    response = client.get('/health')
+    assert response.status_code == 200
+    json_data = response.get_json()
+    assert json_data["status"] == "healthy"
+    assert json_data["version"] == "2.0.0"
