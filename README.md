@@ -1,5 +1,5 @@
 <div align="center">
-### AI-Based Cyber Threat Detection Framework
+### AI-Based Cyber Threat Detection Framework###
 
 Enterprise AI-powered Cyber Threat Detection Platform built using **Flask**, **Machine Learning**, and the **CICIDS2017 Dataset**.
 
